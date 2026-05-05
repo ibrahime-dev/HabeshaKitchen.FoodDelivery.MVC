@@ -1,0 +1,405 @@
+@model IEnumerable<FoodDelivery.Models.MenuItem>
+@{
+    ViewBag.Title = "Habesha Kitchen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions {
+    // Helper functions for mock data to match the image exactly since the DB doesn't have images or spice levels
+    public string GetImageForName(string name)
+    {
+        if (name == null) return "https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=600&auto=format&fit=crop";
+        if (name.Contains("Special")) return "https://static.wixstatic.com/media/0580d1_0599e840ca70401fb54c69b2ad412503~mv2.jpg/v1/fill/w_568,h_398,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/0580d1_0599e840ca70401fb54c69b2ad412503~mv2.jpg";
+        if (name.Contains("Doro Tibs")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5NnbgLoEGw3oOE6IalWbuXcUXpv75R50o0Q&s";
+        if (name.Contains("Doro")) return "https://images.unsplash.com/photo-1632832811370-dcb198086205?w=600&auto=format&fit=crop&q=80";
+        if (name.Contains("Sega")) return "https://chipabythedozen.com/wp-content/uploads/2019/11/Siga-Wot-Ethiopian-Beef-Stew.jpg";
+        if (name.Contains("Gomen")) return "https://cloudfront-us-east-1.images.arcpublishing.com/ajc/C2VW2QO7AGURKU24USH6VVLLDY.jpg";
+        if (name.Contains("Shiro")) return "https://holycowvegan.net/wp-content/uploads/2023/02/ethiopian-shiro-wot-1.jpg";
+        if (name.Contains("Atkilt")) return "https://nomnompaleo.com/wp-content/uploads/2020/02/800-IP-Atkilt-Hero-2-500x375.jpg";
+        if (name.Contains("Misir")) return "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/9/7/0/DV2507H_Misir-Wot-Spicy-Red-Lentils_s4x3.jpg.rend.hgtvcom.1280.960.suffix/1473350482641.webp";
+        if (name.Contains("Shekla Tibs")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDhGg3Hitp2Z-m7xJ-cxAr8SDClLRAcZQI2w&s";
+        if (name.Contains("Lamb Tibs Awaze")) return "https://i.ytimg.com/vi/tfjjPBzxq1g/sddefault.jpg";
+        if (name.Contains("Lamb Tibs")) return "https://www.thefooddictator.com/wp-content/uploads/2025/05/lambtibs.jpeg";
+        if (name.Contains("Lebleb Tibs")) return "https://images.squarespace-cdn.com/content/v1/51c325ece4b01f1752ee3259/1592488907301-HYXR2WFC7BXFJHXMOL8U/DSC00054.jpg?format=1000w";
+        if (name.Contains("Tibs")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJigE6bMgMa-qhVsI0cYOGyabH2N9VmPZNyg&s";
+        if (name.Contains("Dulet")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUyH1_cWJsxUlAAgSUhSggWaQ8UdpEGxveFg&s";
+        if (name.Contains("Gored")) return "https://pbs.twimg.com/media/DrJIfVsXgAAQ9OA.jpg";
+        if (name.Contains("Kitfo")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaaxS_SUMOEoFpNOnT6X-f3YLTBFYgu8AWAQ&s";
+        if (name.Contains("Tea") || name.Contains("Shai")) return "https://thebalemoya.com/cdn/shop/articles/ethiopiantea.png?v=1709920159";
+        if (name.Contains("Coffee")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGMYnm2Cnt98sBOyhmbZa8yRx9aajS5f2nAQ&s";
+        if (name.Contains("Macchiato")) return "https://preview.redd.it/ethiopian-macchiato-the-best-v0-00gfpunp9aq21.jpg?width=640&crop=smart&auto=webp&s=59a32511abed1dd7b70e3c8a44b7b637d42f3179";
+        if (name.Contains("Avocado")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXH0ldVRwWOPSPglF6sns5LSJTj1ysEwJ1JA&s";
+        if (name.Contains("Mango")) return "https://www.cookedbyjulie.com/wp-content/uploads/2020/05/Ethiopian-drink-one.jpg";
+        if (name.Contains("Fresh Juice")) return "https://www.ourbusinessladder.com/wp-content/uploads/2016/03/fruit-juice.jpg";
+        if (name.Contains("Spris")) return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjjG6lVhpb2AFZ7121ADLicn-y5q4qu_L-3A&s";
+        if (name.Contains("Soft Drink")) return "https://www.shutterstock.com/image-photo/poznan-pol-mar-21-2025-260nw-2609599401.jpg";
+        return "https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=600&auto=format&fit=crop";
+    }
+    
+    public string GetSpiceLevel(string name)
+    {
+        if (name == null) return "";
+        if (name.Contains("Doro") || name.Contains("Shekla") || name.Contains("Dulet")) return "Spicy";
+        if (name.Contains("Sega") || name.Contains("Gored")) return "Very Spicy";
+        if (name.Contains("Shiro") || name.Contains("Atkilt")) return "Mild";
+        if (name.Contains("Misir")) return "Very Spicy";
+        if (name.Contains("Tibs") || name.Contains("Kitfo")) return "Spicy";
+        return "";
+    }
+
+    public string GetBadge(string name) 
+    {
+        if (name == null) return "";
+        if (name.Contains("Doro Wot") || name.Contains("Shekla Tibs")) return "<div class='badge-pop bg-popular'>Popular</div>";
+        if (name.Contains("Tibs") || name.Contains("Kitfo")) return "<div class='badge-pop bg-bestseller'>Best Seller</div>";
+        return "";
+    }
+}
+
+<style>
+    /* Card Styles matching image */
+    .menu-card { 
+        border-radius: 16px; 
+        border: none; 
+        background: #fff; 
+        text-align: left; 
+        position: relative; 
+        overflow: visible; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .menu-card-img-wrapper { 
+        position: relative; 
+        width: 100%; 
+        padding-top: 66%; 
+        border-radius: 12px 12px 0 0; 
+        overflow: hidden; 
+    }
+    .menu-card-img { 
+        position: absolute; 
+        top: 0; left: 0; 
+        width: 100%; height: 100%; 
+        object-fit: cover; 
+    }
+    .badge-pop { 
+        position: absolute; 
+        top: 10px; left: 10px; 
+        border-radius: 6px; 
+        padding: 4px 8px; 
+        font-weight: 700; 
+        font-size: 0.75rem; 
+        color: #fff; 
+        z-index: 10; 
+        display:flex; 
+        align-items:center; 
+        gap:4px; 
+    }
+    .bg-popular { background-color: #d13028; }
+    .bg-bestseller { background-color: #e59325; }
+    
+    .card-body-custom {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .spices { font-size: 0.9rem; color: #dc3545; }
+    
+    .card-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .card-title-text { font-size: 1.15rem; font-weight: 800; color: #222; margin: 0; }
+    .card-desc { font-size: 0.85rem; color: #666; margin-bottom: 16px; flex-grow: 1; }
+    
+    .card-bottom-row { display: flex; justify-content: space-between; align-items: center; }
+    .card-price { font-size: 1.25rem; font-weight: 800; color: #db8a19; margin: 0; }
+    .add-btn { 
+        background-color: #c93627; 
+        color: #fff; 
+        font-size: 0.85rem; 
+        padding: 6px 14px; 
+        border-radius: 6px; 
+        border: none; 
+        font-weight: 700; 
+        display:flex; 
+        align-items:center; 
+        gap:4px; 
+        text-decoration:none;
+        transition: 0.2s ease;
+    }
+    .add-btn:hover { background-color: #a7281c; color: #fff; }
+
+    /* Category Buttons */
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .cat-btn { 
+        border-radius: 30px; 
+        padding: 10px 20px; 
+        font-weight: 600; 
+        font-size: 0.95rem; 
+        border: none; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06); 
+        background: #fff; 
+        color: #444; 
+        display:inline-flex; 
+        align-items:center; 
+        gap:8px;
+        transition: 0.2s ease;
+    }
+    .cat-btn.active-cat { background: #fca01a; color: #fff; }
+    .cat-emoji { font-size: 1.2rem; }
+    
+    /* Hero */
+    .hero-container {
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        margin-top: 15px;
+        margin-bottom: 45px;
+        background-color: #1a1a1a;
+        background-image: url('https://eggs.ca/wp-content/uploads/2024/06/EFC-doro-wat-hero-1280x720-1.jpg'); 
+        background-size: cover;
+        background-position: center;
+        padding: 100px 30px 120px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .hero-container::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
+        z-index: 1;
+    }
+    .hero-content { position: relative; z-index: 10; max-width: 800px; margin: 0 auto; }
+    .hero-title-top { font-size: 2.8rem; font-weight: 800; color: #fff; margin-bottom: -5px; line-height:1.2; }
+    .hero-title-main { font-size: 3.6rem; font-weight: 800; color: #fca01a; margin-bottom: 10px; line-height:1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .hero-subtitle { font-size: 1.15rem; color: #e2e8f0; font-weight: 400; margin-bottom: 30px; letter-spacing: 0.5px; }
+    
+    .btn-explore { 
+        background-color: #fca01a; 
+        color: #fff; 
+        font-weight: 600; 
+        border-radius: 30px; 
+        padding: 12px 28px; 
+        border: none; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 8px; 
+        font-size: 1.1rem; 
+        text-decoration: none;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .btn-explore:hover { background-color: #e89114; color:#fff; transform: translateY(-2px); }
+    .btn-explore i.circle-icon { 
+        border: 1.5px solid rgba(255,255,255,0.8); 
+        border-radius: 50%; 
+        width: 22px; height: 22px; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 12px; 
+    }
+
+    .section-title { font-size: 2.2rem; font-weight: 800; color: #2a3a2e; margin-bottom: 5px; }
+    .section-underline { width: 50px; height: 3px; background: #ea7021; margin: 0 auto 30px; border-radius: 2px; }
+</style>
+
+<!-- Hero Section -->
+<div class="container px-0 px-md-3">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title-top">Welcome to</h1>
+            <h1 class="hero-title-main">Habesha Kitchen</h1>
+            <p class="hero-subtitle">Authentic Ethiopian food delivered fresh to your door</p>
+            <a href="#menu-section" class="btn-explore">
+                Explore Menu <i class="bi bi-arrow-down circle-icon"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5 pb-4" id="menu-section">
+    <div class="text-center mb-4">
+        <h2 class="section-title">Our Ethiopian Menu</h2>
+        <div class="section-underline"></div>
+    </div>
+
+    <!-- Category Filter Buttons (horizontal scroll) -->
+    <div class="d-flex gap-3 mb-4 filter-scroll justify-content-center" style="overflow-x:auto; white-space:nowrap;">
+        <button class="cat-btn active-cat" onclick="filterCategory('all', this)">
+            All Items
+        </button>
+        <button class="cat-btn" onclick="filterCategory('Tibs', this)">
+            Tibs
+        </button>
+        <button class="cat-btn" onclick="filterCategory('Injera & Wot', this)">
+            Injera & Wot
+        </button>
+        <button class="cat-btn" onclick="filterCategory('Drinks', this)">
+            Drinks
+        </button>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        var categories = Model.Select(m => m.Category)
+                              .Where(c => c != "Traditional")
+                              .Distinct()
+                              .OrderBy(c => c == "Tibs" ? 1 : c == "Drinks" ? 3 : 2).ToList();
+        foreach (var category in categories)
+        {
+            <div class="category-section mt-4" data-category="@category">
+                <h4 class="mb-4 fw-bold text-secondary text-uppercase ps-3 border-start border-warning border-4">@category</h4>
+                <div class="row g-4">
+                    @foreach (var item in Model.Where(m => m.Category == category))
+                    {
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="menu-card">
+                                <div class="menu-card-img-wrapper">
+                                    @Html.Raw(GetBadge(item.Name))
+                                    <img src="@(!string.IsNullOrEmpty(item.ImageUrl) ? (item.ImageUrl.StartsWith("http") ? item.ImageUrl : Url.Content(item.ImageUrl)) : GetImageForName(item.Name))" class="menu-card-img" alt="@item.Name" />
+                                </div>
+                                <div class="card-body-custom">
+                                    <div class="card-title-row">
+                                        <h5 class="card-title-text">@item.Name</h5>
+                                        <span class="spices">@Html.Raw(GetSpiceLevel(item.Name))</span>
+                                    </div>
+                                    <p class="card-desc">@item.Description</p>
+                                    <div class="card-bottom-row">
+                                        <div class="card-price">@item.Price.ToString("0") ETB</div>
+                                        @if (Request.IsAuthenticated && User.IsInRole("Customer"))
+                                        {
+                                            using (Html.BeginForm("AddItem", "Cart", new { menuItemId = item.Id }, FormMethod.Post, new { @class = "m-0" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="add-btn">
+                                                    + Add to Cart
+                                                </button>
+                                            }
+                                        }
+                                        else if (!Request.IsAuthenticated)
+                                        {
+                                            <a href="@Url.Action("Login", "Account")" class="add-btn text-decoration-none">+ Add to Cart</a>
+                                        }
+                                        else {
+                                            @* Admin/Owner view *@
+                                            <span class="text-muted small">Not Orderable</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- Mock Data for visual perfect match when model is empty -->
+        <div class="category-section mt-4" data-category="Injera & Wot">
+            <h4 class="mb-4 fw-bold text-secondary text-uppercase ps-3 border-start border-warning border-4">Injera & Wot</h4>
+            <div class="row g-4">
+            <!-- Doro Wot -->
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card">
+                    <div class="menu-card-img-wrapper">
+                        <div class='badge-pop bg-popular'>Popular</div>
+                        <img src="https://images.unsplash.com/photo-1632832811370-dcb198086205?w=600&auto=format&fit=crop&q=80" class="menu-card-img" alt="Doro Wot" />
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="card-title-row">
+                            <h5 class="card-title-text">Doro Wot</h5>
+                            <span class="spices">Spicy</span>
+                        </div>
+                        <p class="card-desc">Spicy chicken stew with egg</p>
+                        <div class="card-bottom-row">
+                            <div class="card-price">250 ETB</div>
+                            <a href="@Url.Action("Login", "Account")" class="add-btn text-decoration-none">+ Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sega Wot -->
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card">
+                    <div class="menu-card-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1627916568324-4f9ce91aa577?w=600&auto=format&fit=crop&q=80" class="menu-card-img" alt="Sega Wot" />
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="card-title-row">
+                            <h5 class="card-title-text">Sega Wot</h5>
+                            <span class="spices">Very Spicy</span>
+                        </div>
+                        <p class="card-desc">Spicy beef stew</p>
+                        <div class="card-bottom-row">
+                            <div class="card-price">220 ETB</div>
+                            <a href="@Url.Action("Login", "Account")" class="add-btn text-decoration-none">+ Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Shiro Wot -->
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card">
+                    <div class="menu-card-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=600&auto=format&fit=crop&q=80" class="menu-card-img" alt="Shiro Wot" />
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="card-title-row">
+                            <h5 class="card-title-text">Shiro Wot</h5>
+                            <span class="spices">Spicy</span>
+                        </div>
+                        <p class="card-desc">Chickpea stew (vegan)</p>
+                        <div class="card-bottom-row">
+                            <div class="card-price">180 ETB</div>
+                            <a href="@Url.Action("Login", "Account")" class="add-btn text-decoration-none">+ Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Misir Wot -->
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card">
+                    <div class="menu-card-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80" class="menu-card-img" alt="Misir Wot" />
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="card-title-row">
+                            <h5 class="card-title-text">Misir Wot</h5>
+                            <span class="spices">Very Spicy</span>
+                        </div>
+                        <p class="card-desc">Spicy lentil stew</p>
+                        <div class="card-bottom-row">
+                            <div class="card-price">170 ETB</div>
+                            <a href="@Url.Action("Login", "Account")" class="add-btn text-decoration-none">+ Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    function filterCategory(cat, btn) {
+        // Update active class on buttons
+        document.querySelectorAll('.cat-btn').forEach(b => {
+             b.classList.remove('active-cat');
+        });
+        btn.classList.add('active-cat');
+        
+        // Hide/show category sections
+        document.querySelectorAll('.category-section').forEach(section => {
+            if (cat === 'all' || section.dataset.category === cat) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    }
+</script>
+}

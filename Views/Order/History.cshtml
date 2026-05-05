@@ -1,0 +1,54 @@
+@model IEnumerable<FoodDelivery.Models.ViewModels.OrderHistoryViewModel>
+@using System.Linq
+@{
+    ViewBag.Title = "My Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">My Orders</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have no orders yet. @Html.ActionLink("Browse menu", "Index", "Home")
+    </div>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Order #@order.OrderId</strong> &mdash; @order.RestaurantName
+                </div>
+                <div class="text-end">
+                    <span class="badge @FoodDelivery.Helpers.OrderStatusHelper.GetBadgeClass(order.Status) me-2">@order.Status</span>
+                    <strong>@order.TotalAmount.ToString("F2") ETB</strong>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-2">@order.CreatedAt.ToString("MMM dd, yyyy HH:mm")</p>
+                <ul class="list-unstyled mb-3">
+                    @foreach (var item in order.Items)
+                    {
+                        <li><i class="bi bi-dot"></i> @item.MenuItemName &times; @item.Quantity &mdash; @item.LineTotal.ToString("F2") ETB</li>
+                    }
+                </ul>
+                <div class="d-flex gap-2">
+                    @Html.ActionLink("View Details", "Details", new { id = order.OrderId }, new { @class = "btn btn-outline-primary btn-sm" })
+                    @if (order.Status != FoodDelivery.Models.OrderStatus.Delivered &&
+                         order.Status != FoodDelivery.Models.OrderStatus.Cancelled &&
+                         order.Status != FoodDelivery.Models.OrderStatus.Rejected)
+                    {
+                        using (Html.BeginForm("Cancel", "Order", new { id = order.OrderId }, FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this order?')">Cancel Order</button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

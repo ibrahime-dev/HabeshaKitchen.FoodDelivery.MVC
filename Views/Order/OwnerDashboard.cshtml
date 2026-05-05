@@ -1,0 +1,94 @@
+@model IEnumerable<FoodDelivery.Models.Order>
+@{
+    ViewBag.Title = "Incoming Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4">Incoming Orders Dashboard</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4">Order ID</th>
+                            <th class="py-3">Customer</th>
+                            <th class="py-3">Date</th>
+                            <th class="py-3">Total</th>
+                            <th class="py-3">Payment</th>
+                            <th class="py-3">Tx Ref</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3 px-4 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="px-4 fw-bold">#@order.Id</td>
+                                <td>@order.Customer.FullName</td>
+                                <td>@order.CreatedAt.ToLocalTime().ToString("g")</td>
+                                <td>@order.TotalAmount.ToString("0.00") ETB</td>
+                                <td>
+                                    @if (order.Payment != null)
+                                    {
+                                        <span class="badge @(order.Payment.Status == FoodDelivery.Models.PaymentStatus.Pending ? "bg-warning text-dark" : "bg-success")">
+                                            @order.Payment.Method
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (order.Payment != null && !string.IsNullOrEmpty(order.Payment.TxRef))
+                                    {
+                                        <code class="text-success">@order.Payment.TxRef</code>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">N/A</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge 
+                                        @(order.Status == FoodDelivery.Models.OrderStatus.Pending ? "bg-warning text-dark" :
+                                          order.Status == FoodDelivery.Models.OrderStatus.Confirmed ? "bg-info text-dark" :
+                                          order.Status == FoodDelivery.Models.OrderStatus.Preparing ? "bg-primary" :
+                                          order.Status == FoodDelivery.Models.OrderStatus.Delivered ? "bg-success" : "bg-danger")">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td class="px-4 text-end">
+                                    <div class="d-inline-flex gap-2">
+                                        <a href="@Url.Action("Details", "Order", new { id = order.Id })" class="btn btn-sm btn-outline-secondary">View</a>
+                                        
+                                        @using (Html.BeginForm("UpdateStatus", "Order", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@order.Id" />
+                                            <select name="newStatus" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                <option value="" disabled selected>Change Status...</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Confirmed">Confirmed</option>
+                                                <option value="Preparing">Preparing</option>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Rejected">Rejected</option>
+                                            </select>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (!Model.Any())
+            {
+                <div class="p-5 text-center text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                    No orders have been received yet.
+                </div>
+            }
+        </div>
+    </div>
+</div>

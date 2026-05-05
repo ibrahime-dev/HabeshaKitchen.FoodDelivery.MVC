@@ -1,0 +1,31 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet packages
+packages/
+*.nupkg
+!packages/repositories.config
+
+# Publish output
+publish/
+PublishProfiles/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Secrets / connection strings (be careful)
+Web.config
+
+# Keep Web.config.example if you have one

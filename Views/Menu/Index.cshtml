@@ -1,0 +1,80 @@
+@model IEnumerable<FoodDelivery.Models.MenuItem>
+@using System.Linq
+@{
+    ViewBag.Title = "Menu Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Owner Nav Tabs -->
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Dashboard", "Restaurant")">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active fw-bold" href="@Url.Action("Index", "Menu")">Menu</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Dashboard", "Restaurant")">Orders</a>
+    </li>
+</ul>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">@ViewBag.RestaurantName Menu</h2>
+    @Html.ActionLink("+ Add Item", "Create", null, new { @class = "btn btn-success" })
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No menu items yet. Add your first item!</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.Name</strong></td>
+                        <td>@item.Category</td>
+                        <td>@item.Price.ToString("F2") ETB</td>
+                        <td>
+                            @if (item.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Unavailable</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm me-1" })
+                            @using (Html.BeginForm("ToggleAvailability", "Menu", new { id = item.Id }, FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-warning btn-sm me-1">
+                                    @(item.IsAvailable ? "Disable" : "Enable")
+                                </button>
+                            }
+                            @using (Html.BeginForm("Delete", "Menu", new { id = item.Id }, FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this item?')">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

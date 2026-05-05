@@ -1,0 +1,49 @@
+@model FoodDelivery.Models.ViewModels.RestaurantCreateEditViewModel
+@{
+    ViewBag.Title = "Edit Restaurant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-4">Edit Restaurant</h2>
+        <div class="card border-0 shadow-sm p-4">
+            @using (Html.BeginForm("Edit", "Restaurant", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2" })
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Name, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "e.g. Habesha Kitchen", maxlength = "100" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Description, new { @class = "form-label fw-bold" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 3, placeholder = "Brief description of your restaurant (optional)", maxlength = "500" })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger small" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.CuisineCategory, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.CuisineCategory, new { @class = "form-control", placeholder = "e.g. Ethiopian, Italian, Chinese", maxlength = "50" })
+                    @Html.ValidationMessageFor(m => m.CuisineCategory, "", new { @class = "text-danger small" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "e.g. 0911234567 or +251911234567", maxlength = "20" })
+                    @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger small" })
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    @Html.ActionLink("Cancel", "Dashboard", null, new { @class = "btn btn-outline-secondary" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}

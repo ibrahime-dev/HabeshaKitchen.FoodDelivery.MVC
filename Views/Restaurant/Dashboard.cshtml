@@ -1,0 +1,95 @@
+@model FoodDelivery.Models.ViewModels.RestaurantDashboardViewModel
+@using System.Linq
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">@Model.Restaurant.Name Dashboard</h2>
+    <div>
+        @Html.ActionLink("Edit Restaurant", "Edit", new { id = Model.Restaurant.Id }, new { @class = "btn btn-outline-secondary btn-sm me-1" })
+        @Html.ActionLink("Manage Menu", "Index", "Menu", null, new { @class = "btn btn-outline-primary btn-sm" })
+    </div>
+</div>
+
+@using (Html.BeginForm("Dashboard", "Restaurant", FormMethod.Get, new { @class = "row g-2 align-items-center mb-3" }))
+{
+    <div class="col-auto">
+        <label class="col-form-label">Filter by Status:</label>
+    </div>
+    <div class="col-auto">
+        <select name="statusFilter" class="form-select form-select-sm">
+            <option value="">All</option>
+            @foreach (var s in Enum.GetValues(typeof(FoodDelivery.Models.OrderStatus)).Cast<FoodDelivery.Models.OrderStatus>())
+            {
+                <option value="@s" @(s.ToString() == Model.StatusFilter ? "selected" : "")>@s</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-secondary">Filter</button>
+    </div>
+}
+
+@if (!Model.Orders.Any())
+{
+    <div class="alert alert-info">No orders found.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td><strong>#@order.OrderId</strong></td>
+                        <td>@order.CustomerName</td>
+                        <td>@order.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                        <td>@order.TotalAmount.ToString("F2") ETB</td>
+                        <td>
+                            <span class="badge @FoodDelivery.Helpers.OrderStatusHelper.GetBadgeClass(order.Status)">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (order.NextStatus.HasValue)
+                            {
+                                using (Html.BeginForm("UpdateOrderStatus", "Restaurant", FormMethod.Post, new { style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="OrderId" value="@order.OrderId" />
+                                    <input type="hidden" name="NewStatus" value="@order.NextStatus.Value" />
+                                    <button type="submit" class="btn btn-success btn-sm me-1">
+                                        @(order.Status == FoodDelivery.Models.OrderStatus.Pending ? "Accept" : order.NextStatus.Value.ToString())
+                                    </button>
+                                }
+                            }
+                            @if (order.Status == FoodDelivery.Models.OrderStatus.Pending)
+                            {
+                                using (Html.BeginForm("UpdateOrderStatus", "Restaurant", FormMethod.Post, new { style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="OrderId" value="@order.OrderId" />
+                                    <input type="hidden" name="NewStatus" value="Rejected" />
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this order?')">Reject</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

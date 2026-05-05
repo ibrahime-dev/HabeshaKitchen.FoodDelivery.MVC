@@ -1,0 +1,83 @@
+@model FoodDelivery.Models.ViewModels.MenuItemCreateEditViewModel
+@{
+    ViewBag.Title = "Edit Menu Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-4">Edit Menu Item</h2>
+        <div class="card border-0 shadow-sm p-4">
+            @using (Html.BeginForm("Edit", "Menu", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Name, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Description, new { @class = "form-label fw-bold" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 3 })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Price, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", step = "0.01", min = "0.01" })
+                    @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Category, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Category, new { @class = "form-control", placeholder = "e.g. Tibs, Drinks, Injera & Wot" })
+                    @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.ImageFile, new { @class = "form-label fw-bold" })
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mb-2">
+                            <img id="currentImg" src="@Model.ImageUrl" alt="Current image" class="rounded" style="max-height:120px; object-fit:cover;" />
+                            <div class="form-text text-muted">Current image.</div>
+                        </div>
+                    }
+                    <label class="form-label text-muted small">Paste image URL</label>
+                    @Html.TextBoxFor(m => m.ImageUrl, new { @class = "form-control mb-2", placeholder = "https://example.com/image.jpg" })
+                    <label class="form-label text-muted small">Or upload a file</label>
+                    <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                    <div class="form-text text-muted">File upload overrides the URL. Leave both empty to keep current image.</div>
+                    <div id="imagePreview" class="mt-2" style="display:none;">
+                        <img id="previewImg" src="#" alt="Preview" class="rounded" style="max-height:160px; object-fit:cover;" />
+                    </div>
+                </div>
+                <div class="mb-3 form-check">
+                    @Html.CheckBoxFor(m => m.IsAvailable, new { @class = "form-check-input" })
+                    @Html.LabelFor(m => m.IsAvailable, new { @class = "form-check-label" })
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-outline-secondary" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        document.getElementById('ImageFile').addEventListener('change', function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

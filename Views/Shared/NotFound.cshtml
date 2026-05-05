@@ -1,0 +1,13 @@
+@{
+    ViewBag.Title = "Not Found";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <h1>404 - Page Not Found</h1>
+            <p>The page you are looking for does not exist.</p>
+            @Html.ActionLink("Go to Home", "Index", "Home", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>

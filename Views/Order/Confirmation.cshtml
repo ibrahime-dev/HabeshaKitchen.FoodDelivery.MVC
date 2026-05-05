@@ -1,0 +1,60 @@
+@model FoodDelivery.Models.ViewModels.OrderConfirmationViewModel
+@{
+    ViewBag.Title = "Order Confirmed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="alert alert-success">
+            <h4 class="alert-heading">Order Placed Successfully!</h4>
+            <p>Your order <strong>#@Model.OrderId</strong> has been received and is awaiting confirmation.</p>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header"><h5 class="mb-0">Order Summary</h5></div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Order #</dt><dd class="col-sm-9">@Model.OrderId</dd>
+                    <dt class="col-sm-3">Restaurant</dt><dd class="col-sm-9">@Model.RestaurantName</dd>
+                    <dt class="col-sm-3">Date</dt><dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</dd>
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9"><span class="badge bg-warning text-dark">@Model.Status</span></dd>
+                    <dt class="col-sm-3">Payment</dt><dd class="col-sm-9">@Model.PaymentStatus</dd>
+                </dl>
+
+                <h6 class="mt-3">Delivery Address</h6>
+                <address>@Model.Street<br />@Model.City, @Model.PostalCode</address>
+
+                <h6 class="mt-3">Items</h6>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.MenuItemName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("F2") ETB</td>
+                                <td>@item.LineTotal.ToString("F2") ETB</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Total</strong></td>
+                            <td><strong>@Model.TotalAmount.ToString("F2") ETB</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            @Html.ActionLink("View My Orders", "History", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Continue Shopping", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
+        </div>
+    </div>
+</div>

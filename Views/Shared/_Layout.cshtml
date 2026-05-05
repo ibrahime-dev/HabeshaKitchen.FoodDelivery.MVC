@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Habesha Kitchen</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/Content/site.css" />
+    <style>
+        .navbar-brand { transition: transform 0.2s ease; }
+        .navbar-brand:hover { transform: scale(1.02); }
+        .nav-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand text-decoration-none">
+                <img src="https://ui-avatars.com/api/?name=HK&background=dfa13d&color=fff&rounded=true" alt="Logo" width="36" height="36" class="me-2 rounded-circle" style="object-fit:cover; border:2px solid #dfa13d;" />
+                Habesha Kitchen
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                @if (!Request.IsAuthenticated)
+                {
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
+                        <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("About", "Home")">About Us</a></li>
+                        <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a></li>
+                        <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Login", "Account")">Login</a></li>
+                        <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Register", "Account")">Register</a></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
+                        }
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Cart")"><i class="bi bi-cart3 me-1"></i> My Cart</a></li>
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("History", "Order")">My Orders</a></li>
+                        }
+                        @if (User.IsInRole("Restaurant_Owner"))
+                        {
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("OwnerDashboard", "Order")">Orders Dashboard</a></li>
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Menu")">Menu Management</a></li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Index", "Admin")">Dashboard</a></li>
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Users", "Admin")">Users</a></li>
+                            <li class="nav-item ms-2"><a class="nav-link" href="@Url.Action("Orders", "Admin")">All Orders</a></li>
+                        }
+                        @Html.Partial("_LoginPartial")
+                    </ul>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-dismissible fade show mt-4 shadow-sm border-0 d-flex align-items-center" style="background-color: #fef2f2; border-left: 5px solid #ef4444 !important; border-radius: 10px; padding: 16px 20px;">
+                <i class="bi bi-exclamation-octagon-fill fs-4 text-danger me-3"></i>
+                <div style="color: #991b1b; font-weight: 500; font-size: 1.05rem;">
+                    @TempData["Error"]
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" style="filter: opacity(0.6);"></button>
+            </div>
+        }
+        @if (TempData["Info"] != null)
+        {
+            <div class="alert alert-dismissible fade show mt-4 shadow-sm border-0 d-flex align-items-center" style="background-color: #ecfdf5; border-left: 5px solid #10b981 !important; border-radius: 10px; padding: 16px 20px;">
+                <i class="bi bi-check-circle-fill fs-4 text-success me-3"></i>
+                <div style="color: #065f46; font-weight: 500; font-size: 1.05rem;">
+                    @TempData["Info"]
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" style="filter: opacity(0.6);"></button>
+            </div>
+        }
+        @RenderBody()
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0 pe-lg-5">
+                    <h5 class="footer-title">Habesha Kitchen</h5>
+                    <p class="mb-4">Experience the most authentic Ethiopian cuisine delivered fast and fresh. Bringing the true taste of Habesha straight to your cultural home.</p>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="footer-title">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="@Url.Action("Index", "Home")" class="footer-link">Home</a></li>
+                        <li class="mb-2"><a href="@Url.Action("About", "Home")" class="footer-link">About Us</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Contact", "Home")" class="footer-link">Contact</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
+                    <h6 class="footer-title">Contact Us</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="bi bi-geo-alt fs-5 me-3 text-warning"></i> 
+                            <span>Bole, Addis Ababa</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="bi bi-telephone fs-5 me-3 text-warning"></i> 
+                            <span>+251 91 234 5678</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="bi bi-envelope fs-5 me-3 text-warning"></i> 
+                            <span>habeshakitchen@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 class="footer-title">Follow Us</h6>
+                    <p class="mb-3">Stay connected for exclusive offers!</p>
+                    <div class="social-icons d-flex gap-3 fs-5">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-center align-items-center">
+                <p class="mb-0 small">&copy; @DateTime.Now.Year Habesha Kitchen. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

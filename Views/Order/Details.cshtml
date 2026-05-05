@@ -1,0 +1,72 @@
+@model FoodDelivery.Models.ViewModels.OrderConfirmationViewModel
+@{
+    ViewBag.Title = "Order Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Order #@Model.OrderId</h2>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Restaurant</dt>
+                    <dd class="col-sm-9">@Model.RestaurantName</dd>
+                    <dt class="col-sm-3">Date</dt>
+                    <dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</dd>
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge @FoodDelivery.Helpers.OrderStatusHelper.GetBadgeClass(Model.Status)">@Model.Status</span>
+                    </dd>
+                    <dt class="col-sm-3">Payment</dt>
+                    <dd class="col-sm-9">@Model.PaymentStatus</dd>
+                </dl>
+
+                <h5 class="mt-3">Delivery Address</h5>
+                <address>
+                    @Model.Street<br />
+                    @Model.City, @Model.PostalCode
+                </address>
+
+                <h5 class="mt-3">Items</h5>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.MenuItemName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("F2") ETB</td>
+                                <td>@item.LineTotal.ToString("F2") ETB</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Total</strong></td>
+                            <td><strong>@Model.TotalAmount.ToString("F2") ETB</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            @Html.ActionLink("Back to Orders", "History", null, new { @class = "btn btn-outline-secondary" })
+            @if (Model.Status != FoodDelivery.Models.OrderStatus.Delivered &&
+                 Model.Status != FoodDelivery.Models.OrderStatus.Cancelled &&
+                 Model.Status != FoodDelivery.Models.OrderStatus.Rejected)
+            {
+                using (Html.BeginForm("Cancel", "Order", new { id = Model.OrderId }, FormMethod.Post, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Cancel this order?')">Cancel Order</button>
+                }
+            }
+        </div>
+    </div>
+</div>

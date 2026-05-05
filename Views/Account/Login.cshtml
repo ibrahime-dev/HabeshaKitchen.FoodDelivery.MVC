@@ -1,0 +1,61 @@
+@model FoodDelivery.Models.ViewModels.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5 py-5 min-vh-100 d-flex align-items-center">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-5">
+            <div class="card auth-card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white text-center py-4 border-0 auth-header" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    <div class="display-5 mb-2"><i class="bi bi-person-circle"></i></div>
+                    <h3 class="mb-0 fw-bold">Welcome Back</h3>
+                    <p class="mb-0 small text-white-50">Login to your account to continue</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger small py-2 border-0 rounded-3" })
+
+                        <div class="form-floating mb-3 position-relative">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light border-0", placeholder = "name@example.com" })
+                            @Html.LabelFor(m => m.Email, new { @class = "text-muted" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-1" })
+                        </div>
+
+                        <div class="form-floating mb-4 mt-4 position-relative">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control bg-light border-0", placeholder = "Password" })
+                            @Html.LabelFor(m => m.Password, new { @class = "text-muted" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-1" })
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input custom-checkbox" })
+                                @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label text-muted small" })
+                            </div>
+                            <a href="#" class="text-decoration-none small fw-semibold">Forgot Password?</a>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm btn-auth" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none;">
+                                Login <i class="bi bi-box-arrow-in-right ms-1"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <span class="text-muted small">Don't have an account?</span>
+                            @Html.ActionLink("Create one here", "Register", null, new { @class = "text-decoration-none small fw-bold ms-1" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

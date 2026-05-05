@@ -1,0 +1,76 @@
+@model FoodDelivery.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Create Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5 py-5 min-vh-100 d-flex align-items-center">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-10 col-lg-7">
+            <div class="card auth-card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header text-white text-center py-4 border-0 auth-header mt-0" style="background: linear-gradient(135deg, #f59e0b 0%, #ed8936 100%);">
+                    <div class="display-5 mb-2"><i class="bi bi-person-plus"></i></div>
+                    <h3 class="mb-0 fw-bold">Sign Up</h3>
+                    <p class="mb-0 small text-white-50">Join us and experience the best food delivery</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger small py-2 border-0 rounded-3 mb-4" })
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4 position-relative">
+                                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control bg-light border-0", placeholder = "Full Name" })
+                                    @Html.LabelFor(m => m.FullName, new { @class = "text-muted" })
+                                    @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-0" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4 position-relative">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light border-0", placeholder = "name@example.com" })
+                                    @Html.LabelFor(m => m.Email, new { @class = "text-muted" })
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-0" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4 position-relative">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control bg-light border-0", placeholder = "Password" })
+                                    @Html.LabelFor(m => m.Password, new { @class = "text-muted" })
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-0" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4 position-relative">
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control bg-light border-0", placeholder = "Confirm Password" })
+                                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "text-muted" })
+                                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small position-absolute top-100 start-0 pt-0" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm btn-auth text-white" style="background: linear-gradient(135deg, #f59e0b 0%, #ed8936 100%); border: none;">
+                                Create Account <i class="bi bi-person-check ms-1"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <span class="text-muted small">Already have an account?</span>
+                            @Html.ActionLink("Login here", "Login", null, new { @class = "text-decoration-none small fw-bold ms-1 text-warning" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

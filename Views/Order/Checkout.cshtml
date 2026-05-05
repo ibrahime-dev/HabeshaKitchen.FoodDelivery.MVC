@@ -1,0 +1,235 @@
+@model FoodDelivery.Models.ViewModels.CheckoutViewModel
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">Checkout</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header"><h5 class="mb-0">Delivery Address</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Street, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Street, new { @class = "form-control", placeholder = "Street address" })
+                        @Html.ValidationMessageFor(m => m.Street, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.City, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+                        @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.PostalCode, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal code" })
+                        @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header"><h5 class="mb-0">Payment Options</h5></div>
+                <div class="card-body">
+                    <div class="row g-3">
+
+                        <!-- Telebirr -->
+                        <div class="col-6">
+                            <label class="payment-option w-100" for="payTelebirr">
+                                <input type="radio" name="PaymentMethod" value="Telebirr" id="payTelebirr" class="payment-radio" checked />
+                                <div class="payment-card">
+                                    <div class="pay-icon" style="background:#6B2D8B; padding:0; overflow:hidden;">
+                                        <img src="https://play-lh.googleusercontent.com/89iLWATBIfQSCGpz5IVGrbLDpkZVpWfZAfsICA3l86NsJFqAmoNkd_3RG0VocZpNNA" style="width:48px;height:48px;object-fit:cover;border-radius:50%;" alt="Telebirr" />
+                                    </div>
+                                    <span class="pay-name">Telebirr</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- CBE Birr -->
+                        <div class="col-6">
+                            <label class="payment-option w-100" for="payCBE">
+                                <input type="radio" name="PaymentMethod" value="CBEBirr" id="payCBE" class="payment-radio" />
+                                <div class="payment-card">
+                                    <div class="pay-icon" style="background:#006633; padding:0; overflow:hidden;">
+                                        <img src="https://play-lh.googleusercontent.com/kKGUk63iUIMXF-SL4AklHhZnQesw3-jZT2MR6NuX-xS54ncaZJ-8tlJETZdQYyZ5-g" style="width:48px;height:48px;object-fit:cover;border-radius:50%;" alt="CBE" />
+                                    </div>
+                                    <span class="pay-name">CBE Birr</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Dashen Bank -->
+                        <div class="col-6">
+                            <label class="payment-option w-100" for="payDashen">
+                                <input type="radio" name="PaymentMethod" value="Dashen" id="payDashen" class="payment-radio" />
+                                <div class="payment-card">
+                                    <div class="pay-icon" style="background:#C8102E; padding:0; overflow:hidden;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Dashen_Bank.png" style="width:48px;height:48px;object-fit:cover;border-radius:50%;" alt="Dashen" />
+                                    </div>
+                                    <span class="pay-name">Dashen Bank</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Amhara Bank -->
+                        <div class="col-6">
+                            <label class="payment-option w-100" for="payAmhara">
+                                <input type="radio" name="PaymentMethod" value="Amhara" id="payAmhara" class="payment-radio" />
+                                <div class="payment-card">
+                                    <div class="pay-icon" style="background:#1A5276; padding:0; overflow:hidden;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/en/5/54/Amhara_Bank.png" style="width:48px;height:48px;object-fit:cover;border-radius:50%;" alt="Amhara Bank" />
+                                    </div>
+                                    <span class="pay-name">Amhara Bank</span>
+                                </div>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <!-- Transaction Details Box -->
+                    <div class="transaction-box mt-4 p-3 rounded" id="transactionDetails">
+                        <h6 class="fw-bold mb-3">Send Payment To:</h6>
+                        <div id="txTelebirr" class="tx-detail">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <img src="https://play-lh.googleusercontent.com/89iLWATBIfQSCGpz5IVGrbLDpkZVpWfZAfsICA3l86NsJFqAmoNkd_3RG0VocZpNNA" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+                                <strong>Telebirr</strong>
+                            </div>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td class="text-muted" style="width:140px">Account Name</td><td><strong>Habesha Kitchen</strong></td></tr>
+                                <tr><td class="text-muted">Phone Number</td><td><strong>0912 345 678</strong></td></tr>
+                                <tr><td class="text-muted">Amount</td><td><strong class="text-danger">@Model.Total.ToString("F2") ETB</strong></td></tr>
+                            </table>
+                        </div>
+                        <div id="txCBE" class="tx-detail" style="display:none">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <img src="https://play-lh.googleusercontent.com/kKGUk63iUIMXF-SL4AklHhZnQesw3-jZT2MR6NuX-xS54ncaZJ-8tlJETZdQYyZ5-g" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+                                <strong>CBE Birr</strong>
+                            </div>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td class="text-muted" style="width:140px">Account Name</td><td><strong>Habesha Kitchen</strong></td></tr>
+                                <tr><td class="text-muted">Account Number</td><td><strong>1000 4567 8901</strong></td></tr>
+                                <tr><td class="text-muted">Amount</td><td><strong class="text-danger">@Model.Total.ToString("F2") ETB</strong></td></tr>
+                            </table>
+                        </div>
+                        <div id="txDashen" class="tx-detail" style="display:none">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Dashen_Bank.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+                                <strong>Dashen Bank</strong>
+                            </div>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td class="text-muted" style="width:140px">Account Name</td><td><strong>Habesha Kitchen</strong></td></tr>
+                                <tr><td class="text-muted">Account Number</td><td><strong>0234 5678 9012</strong></td></tr>
+                                <tr><td class="text-muted">Amount</td><td><strong class="text-danger">@Model.Total.ToString("F2") ETB</strong></td></tr>
+                            </table>
+                        </div>
+                        <div id="txAmhara" class="tx-detail" style="display:none">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/en/5/54/Amhara_Bank.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+                                <strong>Amhara Bank</strong>
+                            </div>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td class="text-muted" style="width:140px">Account Name</td><td><strong>Habesha Kitchen</strong></td></tr>
+                                <tr><td class="text-muted">Account Number</td><td><strong>0345 6789 0123</strong></td></tr>
+                                <tr><td class="text-muted">Amount</td><td><strong class="text-danger">@Model.Total.ToString("F2") ETB</strong></td></tr>
+                            </table>
+                        </div>
+                        <div class="alert alert-warning mb-0 mt-2 small">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            After sending the payment, enter your transaction reference number below and click <strong>Place Order</strong>.
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label fw-bold">Transaction Reference Number <span class="text-danger">*</span></label>
+                            <input type="text" name="TransactionRef" class="form-control" placeholder="e.g. TXN123456789" required />
+                            <small class="text-muted">Enter the reference number you received after sending the payment.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                .payment-radio { display: none; }
+                .payment-card {
+                    border: 2px solid #dee2e6;
+                    border-radius: 12px;
+                    padding: 14px 10px;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    background: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 6px;
+                }
+                .pay-icon {
+                    width: 48px; height: 48px;
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1.4rem;
+                    color: #fff;
+                }
+                .pay-name { font-size: 0.88rem; font-weight: 700; color: #222; }
+                .payment-radio:checked + .payment-card {
+                    border-color: #c93627;
+                    background: #fff5f5;
+                    box-shadow: 0 0 0 3px rgba(201,54,39,0.15);
+                }
+                .payment-card:hover { border-color: #c93627; }
+                .transaction-box {
+                    background: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                }
+            </style>
+
+            <script>
+                document.querySelectorAll('.payment-radio').forEach(function(radio) {
+                    radio.addEventListener('change', function() {
+                        document.querySelectorAll('.tx-detail').forEach(function(d) { d.style.display = 'none'; });
+                        var map = { Telebirr: 'txTelebirr', CBEBirr: 'txCBE', Dashen: 'txDashen', Amhara: 'txAmhara' };
+                        var el = document.getElementById(map[this.value]);
+                        if (el) el.style.display = 'block';
+                    });
+                });
+            </script>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                    Place Order &mdash; @Model.Total.ToString("F2") ETB
+                </button>
+                @Html.ActionLink("Back to Cart", "Index", "Cart", null, new { @class = "btn btn-outline-secondary btn-lg" })
+            </div>
+        }
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header"><h5 class="mb-0">Order Summary</h5></div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <tbody>
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td>@item.MenuItemName &times;@item.Quantity</td>
+                                <td class="text-end">@item.Subtotal.ToString("F2") ETB</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td class="text-end"><strong>@Model.Total.ToString("F2") ETB</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

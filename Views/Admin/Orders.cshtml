@@ -1,0 +1,50 @@
+@model IEnumerable<FoodDelivery.Models.ViewModels.AdminOrderViewModel>
+@using System.Linq
+@{
+    ViewBag.Title = "All Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>All Orders</h2>
+    @Html.ActionLink("Back to Dashboard", "Index", null, new { @class = "btn btn-outline-secondary btn-sm" })
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders in the system yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>#@order.OrderId</strong></td>
+                        <td>@order.CustomerEmail</td>
+
+                        <td>@order.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                        <td>@order.TotalAmount.ToString("F2") ETB</td>
+                        <td>
+                            <span class="badge @FoodDelivery.Helpers.OrderStatusHelper.GetBadgeClass(order.Status)">
+                                @order.Status
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

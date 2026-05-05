@@ -1,0 +1,13 @@
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <h1 class="text-danger">Oops! Something went wrong.</h1>
+            <p>An unexpected error occurred. Please try again later.</p>
+            @Html.ActionLink("Go to Home", "Index", "Home", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>

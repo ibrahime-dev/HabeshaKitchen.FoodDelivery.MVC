@@ -1,0 +1,162 @@
+body { 
+    padding-top: 70px; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #fcf6f0;
+    /* Soft pattern or just solid background, let's stick to a solid matching color */
+    background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23d0bca9" fill-opacity="0.15"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+}
+.navbar-brand { font-weight: bold; }
+.status-badge { font-size: 0.85em; }
+
+/* Premium Footer Styles */
+.footer {
+    background: #233827; /* Dark green matching header */
+    color: #cbd5e1;
+    position: relative;
+    padding: 60px 0 25px;
+    margin-top: 80px;
+    border-top: none;
+}
+
+.footer-title {
+    color: #f4a135; /* Golden color matching brand */
+    font-weight: 800;
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+.footer-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: #f59e0b;
+}
+
+.footer .social-icons a {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.08);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.footer .social-icons a:hover {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.footer hr {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 40px 0 25px;
+}
+
+/* Premium Navbar Styles */
+.navbar {
+    background-color: #233827 !important; /* specific green from the image */
+    padding: 12px 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    color: #f4a135 !important; /* Golden/orange */
+    font-weight: 800 !important;
+    font-size: 1.6rem !important;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-item .nav-link {
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 16px !important;
+    color: #e2e8f0 !important;
+}
+
+.nav-item .nav-link:hover {
+    color: #f4a135 !important;
+}
+
+/* Button-Style Links for Nav */
+.nav-btn-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid #fca01a;
+    color: #fca01a !important;
+    font-weight: 700;
+    padding: 8px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nav-btn-login:hover {
+    background: rgba(252, 160, 26, 0.1);
+    color: #fca01a !important;
+    border-color: #ffb13b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(252, 160, 26, 0.2);
+}
+
+.nav-btn-register {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fca01a 0%, #e0840b 100%);
+    color: #1a1a1a !important; /* Dark text for high contrast */
+    font-weight: 800;
+    padding: 10px 26px;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: none;
+    box-shadow: 0 6px 18px rgba(224, 132, 11, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn-register::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg);
+    transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nav-btn-register:hover::before {
+    left: 150%;
+}
+
+.nav-btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(224, 132, 11, 0.5);
+    background: linear-gradient(135deg, #ffb13b 0%, #ed9013 100%);
+    color: #000 !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Form Styles */
+.auth-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: none;
+}
